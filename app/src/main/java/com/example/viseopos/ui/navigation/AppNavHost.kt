@@ -1,0 +1,31 @@
+package com.example.viseopos.ui.navigation
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
+import com.example.viseopos.ui.screen.HomeScreen
+
+
+object AppDestinations {
+    const val HOME_GRAPH_ROUTE = "home_graph"
+    const val HOME_SCREEN_ROUTE = "home_screen"
+    const val FACIAL_RECOGNITION_ROUTE = "facial_recognition"
+}
+
+@Composable
+fun AppNavHost(navController: NavHostController = rememberNavController(), modifier: Modifier) {
+    NavHost(navController = navController, startDestination = AppDestinations.HOME_GRAPH_ROUTE) {
+        navigation(
+            startDestination = AppDestinations.HOME_SCREEN_ROUTE,
+            route = AppDestinations.HOME_GRAPH_ROUTE
+        ) {
+            composable(AppDestinations.HOME_SCREEN_ROUTE) {
+                HomeScreen(navController = navController, modifier = modifier)
+            }
+        }
+    }
+}

@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">ViseoPos</string>
+    <string name="app_name">ViseoPos SAV</string>
+    <string name="home_welcome_message">Bienvenue sur ViseoPos</string>
+    <string name="home_access_odoo_prompt">Connectez-vous rapidement et accédez à Odoo.</string>
+    <string name="home_facial_recognition_button">Connexion par Reconnaissance Faciale</string>
+    <string name="facial_recognition_button_icon_desc">Icône de reconnaissance faciale</string>
 </resources>
