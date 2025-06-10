@@ -1,27 +1,33 @@
 
 
-# 📱 Application Mobile Viseo POS
+# 🛠️ Application Mobile Viseo SAV - Mécaniciens
 
-Bienvenue dans l'application mobile **Viseo POS**, une solution innovante intégrant la reconnaissance faciale pour une expérience de point de vente rapide, sécurisée et connectée à Odoo.
+Cette application mobile est conçue exclusivement pour les **mécaniciens du service après-vente (SAV)** de l’entreprise **Viseo**. Elle permet une **connexion rapide via reconnaissance faciale** et un accès direct à l’interface Odoo dédiée à leurs tâches quotidiennes.
 
 ---
 
-## 🚀 Fonctionnalités principales
+## 🎯 Objectif
+
+Faciliter l’accès sécurisé et rapide à Odoo pour les mécaniciens Viseo, sans saisie manuelle de mot de passe, grâce à une **authentification biométrique** (reconnaissance faciale).
+
+---
+
+## 🚀 Fonctionnalités
 
 ### 1. 🏠 Écran d'accueil
-- Interface d'accueil épurée et intuitive.
-- Affichage du logo ou nom de l'application.
+- Interface sobre et ergonomique.
 - Bouton pour accéder à la reconnaissance faciale.
 
-### 2. 👤 Reconnaissance faciale
-- Ouverture de la caméra frontale pour capturer le visage de l'utilisateur.
-- Traitement de l'image pour identifier l'utilisateur.
+### 2. 👁️ Reconnaissance faciale
+- Utilisation de la caméra pour identifier l'utilisateur.
+- Appairage avec les données des mécaniciens autorisés.
 
 ### 3. ✅ Si l'utilisateur est reconnu
-- Redirection vers une interface web intégrée affichant le tableau de bord Odoo (POS).
+- Lancement d'une **interface web embarquée** (WebView) connectée à Odoo.
+- Accès à l’espace de travail personnalisé (ordre de réparation, planning, rapports…).
 
 ### 4. ❌ Si l'utilisateur n'est pas reconnu
-- Affichage d'un message d'erreur clair et accessible.
-- Option de retour à l'écran d'accueil ou de nouvelle tentative.
+- Message d’erreur avec indication claire.
+- Option pour réessayer.
 
 ---
