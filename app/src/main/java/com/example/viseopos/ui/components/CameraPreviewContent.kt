@@ -35,6 +35,7 @@ import com.example.viseopos.ui.viewModel.CameraPreviewViewModel
 import com.example.viseopos.utils.CameraPreviewUtils
 import com.google.common.util.concurrent.ListenableFuture
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun CameraPreviewContent(navController: NavHostController,
                          lifecycleOwner: LifecycleOwner,
@@ -42,17 +43,24 @@ fun CameraPreviewContent(navController: NavHostController,
                          cameraUtils : CameraPreviewUtils = CameraPreviewUtils()
 ) {
     val context = LocalContext.current
-    val density = LocalDensity.current
+    val cameraProviderFutureFromState by viewModelCamera.cameraProviderFuture.collectAsState()
+
     LaunchedEffect(context) {
-
+        viewModelCamera.initialisation(context)
     }
-
-    AndroidView(
-        factory = { ctx ->
-            val previewView = cameraUtils.createConfiguredPreviewView(ctx)
-
-            previewView
-        },
-        modifier = Modifier.fillMaxSize()
-    )
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()){
+        AndroidView(
+            factory = { ctx ->
+                val previewView = cameraUtils.createConfiguredPreviewView(ctx)
+                previewView
+            },
+            update = { previewView ->
+                cameraProviderFutureFromState?.let { cameraProviderFuture ->
+                    viewModelCamera.configurationCamera(lifecycleOwner, previewView, cameraProviderFuture)
+                }
+            },
+            modifier = Modifier.fillMaxSize()
+        )
+        FacePositionIndicator()
+    }
 }
