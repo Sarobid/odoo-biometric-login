@@ -12,22 +12,23 @@ Offrir un moyen **rapide, sécurisé et intuitif** de se connecter à un environ
 
 ---
 
-## 🚀 Fonctionnalités
 
-### 1. 🏠 Écran d'accueil
-- Interface sobre et ergonomique.
-- Bouton pour accéder à la reconnaissance faciale.
+## 🚀 Fonctionnalités principales
 
-### 2. 👁️ Reconnaissance faciale
-- Utilisation de la caméra pour identifier l'utilisateur.
-- Appairage avec les données des mécaniciens autorisés.
+### 🏠 Écran d'accueil
+- Interface simple et ergonomique.
+- Accès direct à l’identification par reconnaissance faciale.
 
-### 3. ✅ Si l'utilisateur est reconnu
-- Lancement d'une **interface web embarquée** (WebView) connectée à Odoo.
-- Accès à l’espace de travail personnalisé (ordre de réparation, planning, rapports…).
+### 👁️ Authentification par reconnaissance faciale
+- Utilisation de la caméra du téléphone pour reconnaître l'utilisateur.
+- Vérification de l'identité via une base d'utilisateurs autorisés.
 
-### 4. ❌ Si l'utilisateur n'est pas reconnu
-- Message d’erreur avec indication claire.
-- Option pour réessayer.
+### ✅ En cas de reconnaissance réussie
+- Ouverture d'une **interface web embarquée** (WebView) pointant vers l'instance Odoo.
+- Connexion automatique à l’environnement de travail Odoo personnalisé de l’utilisateur (gestion, planning, rapports, etc.).
+
+### ❌ En cas d’échec
+- Message d’erreur clair et guidé.
+- Option pour réessayer la reconnaissance.
 
 ---
