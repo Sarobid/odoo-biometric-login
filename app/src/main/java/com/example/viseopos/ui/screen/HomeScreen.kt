@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +24,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.viseopos.R
 import com.example.viseopos.ui.components.ButtonFacial
+import com.example.viseopos.ui.navigation.AppDestinations
 import com.example.viseopos.ui.theme.ViseoPosTheme
 @Composable
 fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -58,6 +60,15 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier) 
         )
         Spacer(modifier = Modifier.height(48.dp))
         ButtonFacial(navController=navController)
+        Spacer(modifier = Modifier.height(48.dp))
+        Button(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            onClick = {
+                navController.navigate(AppDestinations.WEB_ODOO_ROUTE)
+            }
+            ) {
+            Text(text = "Accéder à Odoo")
+        }
     }
 }
 @Preview(showBackground = true, widthDp = 360, heightDp = 720)
