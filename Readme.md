@@ -1,14 +1,14 @@
 
 
-# 🛠️ Application Mobile Viseo SAV - Mécaniciens
+# 🧠 Application Mobile - Connexion Odoo par Reconnaissance Faciale
 
-Cette application mobile est conçue exclusivement pour les **mécaniciens du service après-vente (SAV)** de l’entreprise **Viseo**. Elle permet une **connexion rapide via reconnaissance faciale** et un accès direct à l’interface Odoo dédiée à leurs tâches quotidiennes.
+Cette application mobile permet à tout utilisateur d’Odoo de se connecter facilement et de manière sécurisée grâce à la **reconnaissance faciale**. Elle vise à simplifier l'accès à Odoo sans avoir à saisir manuellement un identifiant ou mot de passe.
 
 ---
 
 ## 🎯 Objectif
 
-Faciliter l’accès sécurisé et rapide à Odoo pour les mécaniciens Viseo, sans saisie manuelle de mot de passe, grâce à une **authentification biométrique** (reconnaissance faciale).
+Offrir un moyen **rapide, sécurisé et intuitif** de se connecter à un environnement Odoo via **authentification biométrique**.
 
 ---
 
