@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import com.example.viseopos.ui.navigation.AppDestinations
+import com.example.viseopos.ui.webView.MyWebViewClient
 import com.example.viseopos.utils.WebOdooUtils
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -34,6 +35,19 @@ fun WebOdooScreen(
     var isLoading by remember { mutableStateOf(true) }
     var hasError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    val myWebViewClient = remember(navController) {
+        MyWebViewClient(
+            isLoadingLambda = { isLoading = it },
+            hasErrorLambda = { hasError = it },
+            errorMessageLambda = { errorMessage = it },
+            onDeconnectedNavigate = {
+                navController.navigate(AppDestinations.HOME_SCREEN_ROUTE) {
+                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+        )
+    }
     Box(modifier = modifier.fillMaxSize()) {
         AndroidView(
             factory = { context ->
@@ -42,60 +56,8 @@ fun WebOdooScreen(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
-
-                    // Client pour gérer les événements de la page
-                    webViewClient = object : WebViewClient() {
-                        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                            super.onPageStarted(view, url, favicon)
-                            isLoading = true
-                            hasError = false
-                            errorMessage = null
-                            Log.d("WebOdooScreen", "Page started loading: $url")
-                        }
-
-                        override fun onPageFinished(view: WebView?, url: String?) {
-                            super.onPageFinished(view, url)
-                            isLoading = false
-                            Log.d("WebOdooScreen", "Page finished loading: $url")
-                        }
-
-                        override fun onReceivedError(
-                            view: WebView?,
-                            request: WebResourceRequest?,
-                            error: WebResourceError?
-                        ) {
-                            super.onReceivedError(view, request, error)
-                            if (request?.isForMainFrame == true) {
-                                isLoading = false
-                                hasError = true
-                                val errorDesc = "Error ${error?.errorCode}: ${error?.description}"
-                                errorMessage = errorDesc
-                                Log.e("WebOdooScreen", errorDesc)
-                            }
-                        }
-
-                        override fun shouldOverrideUrlLoading(
-                            view: WebView?,
-                            request: WebResourceRequest?
-                        ): Boolean {
-                            val requestedUrl = request?.url?.toString()
-                            if (requestedUrl != null) {
-                                Log.d("WebOdooScreen", "Loading new URL in WebView: $requestedUrl")
-                                if (WebOdooUtils.isDeconnected(requestedUrl)){
-                                    navController.navigate(AppDestinations.HOME_SCREEN_ROUTE)
-                                }else{
-                                    view?.loadUrl(requestedUrl)
-                                }
-                                return true // Nous avons géré l'URL
-                            }
-                            return false // Laisser le système gérer
-                        }
-                    }
-
-                    // Activer JavaScript (souvent nécessaire pour les sites modernes comme Odoo)
+                    webViewClient = myWebViewClient
                     settings.javaScriptEnabled = true
-
-                    // Autres paramètres utiles pour la compatibilité
                     settings.domStorageEnabled = true
                     settings.useWideViewPort = true
                     settings.loadWithOverviewMode = true
