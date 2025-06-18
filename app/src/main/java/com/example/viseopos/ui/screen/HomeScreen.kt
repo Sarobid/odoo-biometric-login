@@ -20,14 +20,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.viseopos.R
 import com.example.viseopos.ui.components.ButtonFacial
 import com.example.viseopos.ui.navigation.AppDestinations
 import com.example.viseopos.ui.theme.ViseoPosTheme
+import com.example.viseopos.ui.viewModel.OdooAuthViewModel
+
 @Composable
-fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier) {
+fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier,odooAuthViewModel: OdooAuthViewModel = viewModel()) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -68,6 +71,15 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier) 
             }
             ) {
             Text(text = "Accéder à Odoo")
+        }
+        Spacer(modifier = Modifier.height(48.dp))
+        Button(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            onClick = {
+                odooAuthViewModel.fetchPartners("")
+            }
+        ) {
+            Text(text = "Test d'acces")
         }
     }
 }

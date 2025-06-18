@@ -41,6 +41,8 @@ android {
 
 dependencies {
 
+    implementation(libs.apache.xmlrpc.client)
+    implementation(libs.apache.xmlrpc.common)
     implementation(libs.androidx.webkit)
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)

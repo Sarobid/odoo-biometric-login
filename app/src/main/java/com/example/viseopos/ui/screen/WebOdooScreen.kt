@@ -20,8 +20,10 @@ import androidx.compose.ui.Alignment // Ajouté
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.viseopos.ui.navigation.AppDestinations
+import com.example.viseopos.ui.viewModel.OdooAuthViewModel
 import com.example.viseopos.ui.webView.MyWebViewClient
 import com.example.viseopos.utils.WebOdooUtils
 
