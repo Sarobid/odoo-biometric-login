@@ -30,7 +30,7 @@ import com.example.viseopos.ui.theme.ViseoPosTheme
 import com.example.viseopos.ui.viewModel.OdooAuthViewModel
 
 @Composable
-fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier,odooAuthViewModel: OdooAuthViewModel = viewModel()) {
+fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -67,19 +67,10 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier,o
         Button(
             modifier = Modifier.padding(horizontal = 16.dp),
             onClick = {
-                navController.navigate(AppDestinations.WEB_ODOO_ROUTE)
-            }
-            ) {
-            Text(text = "Accéder à Odoo")
-        }
-        Spacer(modifier = Modifier.height(48.dp))
-        Button(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            onClick = {
-                odooAuthViewModel.fetchPartners("")
+                navController.navigate(AppDestinations.AUTH_VIA_CODE_ROUTE)
             }
         ) {
-            Text(text = "Test d'acces")
+            Text(text = "Connexion via Code Pin")
         }
     }
 }

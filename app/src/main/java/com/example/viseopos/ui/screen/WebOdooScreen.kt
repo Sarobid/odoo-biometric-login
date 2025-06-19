@@ -31,9 +31,10 @@ import com.example.viseopos.utils.WebOdooUtils
 @Composable
 fun WebOdooScreen(
     navController: NavHostController,
-    modifier: Modifier
+    modifier: Modifier,
+    token: String,
 ) {
-    val url = stringResource(R.string.website_url)
+    val url = stringResource(R.string.website_url) + token
     var isLoading by remember { mutableStateOf(true) }
     var hasError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
