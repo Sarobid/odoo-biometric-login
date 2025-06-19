@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.ViewGroup
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.Box
@@ -55,6 +56,7 @@ fun WebOdooScreen(
         AndroidView(
             factory = { context ->
                 WebView(context).apply {
+                    this.clearCache(true)
                     layoutParams = ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
@@ -62,8 +64,11 @@ fun WebOdooScreen(
                     webViewClient = myWebViewClient
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
+
+                    settings.cacheMode = WebSettings.LOAD_NO_CACHE
                     settings.useWideViewPort = true
                     settings.loadWithOverviewMode = true
+
 
                     Log.d("WebOdooScreen", "Attempting to load URL: $url")
                     loadUrl(url)
