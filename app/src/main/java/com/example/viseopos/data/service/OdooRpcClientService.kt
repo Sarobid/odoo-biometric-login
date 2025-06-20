@@ -12,7 +12,7 @@ class OdooRpcClientService(private val odooConfigService: OdooConfigService) {
     private var internalUid: Int? = null
     private var internalPassword: String? = null
     private val TAG = "OdooRpcClientService"
-    private val erreurConnection = "Pas de connexion Internet. Vérifiez et réessayez."
+    private val erreurConnection = "Pas de connexion Internet ou mauvaise paramètrage. Vérifiez et réessayez."
     suspend fun authenticate(username: String, passwordIn: String): Result<Int> {
         return withContext(Dispatchers.IO) {
             try {

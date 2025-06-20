@@ -34,8 +34,9 @@ fun WebOdooScreen(
     navController: NavHostController,
     modifier: Modifier,
     token: String,
+    hostname: String
 ) {
-    val url = stringResource(R.string.website_url) + token
+    val url = hostname.trimEnd('/')+stringResource(R.string.endpoint_url_connect) + token
     var isLoading by remember { mutableStateOf(true) }
     var hasError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }

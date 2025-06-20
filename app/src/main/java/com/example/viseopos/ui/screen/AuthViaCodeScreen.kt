@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -27,6 +28,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.viseopos.ui.navigation.AppDestinations
 import com.example.viseopos.ui.theme.ViseoPosTheme
 import com.example.viseopos.ui.viewModel.OdooAuthViewModel
+import com.example.viseopos.ui.viewModel.OdooAuthViewModelFactory
+import com.example.viseopos.ui.viewModel.SettingViewModelFactory
+import com.example.viseopos.utils.WebOdooUtils
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,7 +38,9 @@ import com.example.viseopos.ui.viewModel.OdooAuthViewModel
 fun AuthViaCodeScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-     odooAuthViewModel: OdooAuthViewModel = viewModel()
+    odooAuthViewModel: OdooAuthViewModel = viewModel(
+         factory = OdooAuthViewModelFactory (LocalContext.current.applicationContext as android.app.Application)
+     )
 ) {
     val pinLength = 5
     var pinValue by remember { mutableStateOf(List(pinLength) { "" }) }
@@ -42,10 +48,12 @@ fun AuthViaCodeScreen(
     val isLoading by odooAuthViewModel.isLoading.collectAsState()
     val authError by odooAuthViewModel.errorMessage.collectAsState()
     val token by odooAuthViewModel.token.collectAsState()
+    val hostname by odooAuthViewModel.hostname.collectAsState()
 
     LaunchedEffect(token) {
         if (token != null && token!!.isNotBlank()) {
-            navController.navigate(AppDestinations.WEB_ODOO_ROUTE + "/$token")
+            var hostnameEncoded = WebOdooUtils.encodeHostname(hostname)
+            navController.navigate(AppDestinations.WEB_ODOO_ROUTE + "/$token/$hostnameEncoded")
             odooAuthViewModel.consumeToken()
         }
     }

@@ -1,4 +1,4 @@
-package com.example.viseopos.services // Ou votre package
+package com.example.viseopos.services
 
 import android.util.Log
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl
