@@ -20,12 +20,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.viseopos.R
 import com.example.viseopos.ui.components.ButtonFacial
 import com.example.viseopos.ui.navigation.AppDestinations
 import com.example.viseopos.ui.theme.ViseoPosTheme
+import com.example.viseopos.ui.viewModel.OdooAuthViewModel
+
 @Composable
 fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier) {
     Column(
@@ -64,10 +67,10 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier) 
         Button(
             modifier = Modifier.padding(horizontal = 16.dp),
             onClick = {
-                navController.navigate(AppDestinations.WEB_ODOO_ROUTE)
+                navController.navigate(AppDestinations.AUTH_VIA_CODE_ROUTE)
             }
-            ) {
-            Text(text = "Accéder à Odoo")
+        ) {
+            Text(text = "Connexion via Code Pin")
         }
     }
 }
