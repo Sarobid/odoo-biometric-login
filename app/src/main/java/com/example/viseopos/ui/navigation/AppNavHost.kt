@@ -59,16 +59,19 @@ fun AppNavHost(navController: NavHostController = rememberNavController(), modif
             route = AppDestinations.WEB_ODOO_GRAPH_ROUTE
         ) {
             composable(
-                route = AppDestinations.WEB_ODOO_ROUTE + "/{token}/{encodedHostname}",
+                route = AppDestinations.WEB_ODOO_ROUTE + "/{token}/{encodedHostname}/{dbname}",
                 arguments = listOf(navArgument("token") { type =
                     NavType.StringType },
-                    navArgument("encodedHostname") { type = NavType.StringType }
+                    navArgument("encodedHostname") { type = NavType.StringType },
+                    navArgument("dbname") { type = NavType.StringType }
                 )
             ) { backStackEntry ->
                 val token = backStackEntry.arguments?.getString("token")
                 val encodedHostnameArg = backStackEntry.arguments?.getString("encodedHostname")
                 val hostname = WebOdooUtils.decodeHostname(encodedHostnameArg.toString())
-                WebOdooScreen(navController = navController, modifier = modifier,token = token.toString(), hostname = hostname.toString())
+                val dbname = backStackEntry.arguments?.getString("dbname")
+                WebOdooScreen(navController = navController, modifier = modifier,token = token.toString(), hostname = hostname.toString(),
+                    dbName=dbname.toString())
             }
         }
         navigation(

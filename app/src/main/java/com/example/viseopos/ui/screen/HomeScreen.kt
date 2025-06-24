@@ -76,8 +76,8 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier) 
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             Spacer(modifier = Modifier.height(48.dp))
-            ButtonFacial(navController = navController)
-            Spacer(modifier = Modifier.height(24.dp))
+//            ButtonFacial(navController = navController)
+  //          Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = {
                     navController.navigate(AppDestinations.AUTH_VIA_CODE_ROUTE)

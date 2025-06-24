@@ -43,6 +43,9 @@ class OdooAuthViewModel(
     private val _hostname = MutableStateFlow("")
     val hostname: StateFlow<String> = _hostname.asStateFlow()
 
+    private val _dbname = MutableStateFlow("")
+    val dbname: StateFlow<String> = _dbname.asStateFlow()
+
     init {
         loadConfigurationAndInitializeService()
     }
@@ -54,6 +57,7 @@ class OdooAuthViewModel(
                 val config = odooConfigurationManager.getCurrentConfiguration()
                 if (config.hostname != null && config.dbname != null && config.username != null && config.password != null) {
                     _hostname.value = config.hostname
+                    _dbname.value = config.dbname
                     val odooConfigService = OdooConfigService(
                         hostUrl = config.hostname,
                         dbName = config.dbname
@@ -95,7 +99,7 @@ class OdooAuthViewModel(
             try {
                 val currentAuthConfig = odooConfigurationManager.getCurrentConfiguration()
 
-                if (currentAuthConfig.hostname == null || currentAuthConfig.username == null || currentAuthConfig.password == null) {
+                if (currentAuthConfig.dbname == null || currentAuthConfig.hostname == null || currentAuthConfig.username == null || currentAuthConfig.password == null) {
                     _errorMessage.value = "Identifiants d'authentification du bot manquants dans la configuration."
                     _isLoading.value = false
                     return@launch
@@ -107,6 +111,7 @@ class OdooAuthViewModel(
                     passwordForAuth = currentAuthConfig.password
                 )
                 _hostname.value = currentAuthConfig.hostname
+                _dbname.value = currentAuthConfig.dbname
                 result.onSuccess { tokenValue ->
                     Log.i("OdooAuthViewModel", "Token received: $tokenValue")
                     _token.value = tokenValue

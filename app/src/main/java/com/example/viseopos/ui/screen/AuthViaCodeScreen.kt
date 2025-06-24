@@ -42,18 +42,19 @@ fun AuthViaCodeScreen(
          factory = OdooAuthViewModelFactory (LocalContext.current.applicationContext as android.app.Application)
      )
 ) {
-    val pinLength = 5
+    val pinLength = 4
     var pinValue by remember { mutableStateOf(List(pinLength) { "" }) }
     val focusRequesters = remember { List(pinLength) { FocusRequester() } }
     val isLoading by odooAuthViewModel.isLoading.collectAsState()
     val authError by odooAuthViewModel.errorMessage.collectAsState()
     val token by odooAuthViewModel.token.collectAsState()
     val hostname by odooAuthViewModel.hostname.collectAsState()
+    val dbname by odooAuthViewModel.dbname.collectAsState()
 
     LaunchedEffect(token) {
         if (token != null && token!!.isNotBlank()) {
             var hostnameEncoded = WebOdooUtils.encodeHostname(hostname)
-            navController.navigate(AppDestinations.WEB_ODOO_ROUTE + "/$token/$hostnameEncoded")
+            navController.navigate(AppDestinations.WEB_ODOO_ROUTE + "/$token/$hostnameEncoded/$dbname")
             odooAuthViewModel.consumeToken()
         }
     }
