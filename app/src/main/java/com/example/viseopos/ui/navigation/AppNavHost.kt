@@ -13,7 +13,11 @@ import androidx.navigation.navigation
 import com.example.viseopos.ui.screen.AuthViaCodeScreen
 import com.example.viseopos.ui.screen.FacialRecognitionScreen
 import com.example.viseopos.ui.screen.HomeScreen
+import com.example.viseopos.ui.screen.SettingScreen
 import com.example.viseopos.ui.screen.WebOdooScreen
+import com.example.viseopos.utils.WebOdooUtils
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 
 object AppDestinations {
@@ -25,6 +29,8 @@ object AppDestinations {
     const val WEB_ODOO_GRAPH_ROUTE = "web_odoo_graph"
     const val AUTH_VIA_CODE_ROUTE = "auth_via_code"
     const val AUTH_VIA_CODE_GRAPH_ROUTE = "auth_via_code_graph"
+    const val SETTINGS_ROUTE = "settings"
+    const val SETTINGS_GRAPH_ROUTE = "settings_graph"
 }
 
 @Composable
@@ -53,11 +59,19 @@ fun AppNavHost(navController: NavHostController = rememberNavController(), modif
             route = AppDestinations.WEB_ODOO_GRAPH_ROUTE
         ) {
             composable(
-                route = AppDestinations.WEB_ODOO_ROUTE + "/{token}",arguments = listOf(navArgument("token") { type =
-                    NavType.StringType })
+                route = AppDestinations.WEB_ODOO_ROUTE + "/{token}/{encodedHostname}/{dbname}",
+                arguments = listOf(navArgument("token") { type =
+                    NavType.StringType },
+                    navArgument("encodedHostname") { type = NavType.StringType },
+                    navArgument("dbname") { type = NavType.StringType }
+                )
             ) { backStackEntry ->
-                val texteRecu = backStackEntry.arguments?.getString("token")
-                WebOdooScreen(navController = navController, modifier = modifier,token = texteRecu.toString())
+                val token = backStackEntry.arguments?.getString("token")
+                val encodedHostnameArg = backStackEntry.arguments?.getString("encodedHostname")
+                val hostname = WebOdooUtils.decodeHostname(encodedHostnameArg.toString())
+                val dbname = backStackEntry.arguments?.getString("dbname")
+                WebOdooScreen(navController = navController, modifier = modifier,token = token.toString(), hostname = hostname.toString(),
+                    dbName=dbname.toString())
             }
         }
         navigation(
@@ -68,6 +82,14 @@ fun AppNavHost(navController: NavHostController = rememberNavController(), modif
                 route = AppDestinations.AUTH_VIA_CODE_ROUTE
             ) {
                 AuthViaCodeScreen(navController = navController,modifier = modifier)
+            }
+        }
+        navigation(
+            startDestination = AppDestinations.SETTINGS_ROUTE,
+            route = AppDestinations.SETTINGS_GRAPH_ROUTE
+        ) {
+            composable(AppDestinations.SETTINGS_ROUTE) {
+                SettingScreen(navController = navController, modifier = modifier)
             }
         }
     }

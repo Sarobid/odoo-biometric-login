@@ -9,11 +9,15 @@ import android.webkit.WebViewClient
 import com.example.viseopos.utils.WebOdooUtils
 
 class MyWebViewClient(
-    val isLoadingLambda: (Boolean) -> Unit,
-    val hasErrorLambda: (Boolean) -> Unit,
-    val errorMessageLambda: (String?) -> Unit,
-    val onDeconnectedNavigate: () -> Unit
+    private val isLoadingLambda: (Boolean) -> Unit,
+    private val hasErrorLambda: (Boolean) -> Unit,
+    private val errorMessageLambda: (String?) -> Unit,
+    private val onDeconnectedNavigate: () -> Unit,
+    private val urlToLoadAfterInitialDeconnected: String
 ) : WebViewClient() {
+
+    private var connectionAttemptMadeWithTokenUrl = false
+
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         isLoadingLambda(true)
@@ -26,6 +30,13 @@ class MyWebViewClient(
         super.onPageFinished(view, url)
         isLoadingLambda(false)
         Log.d("MyWebViewClient", "Page finished loading: $url")
+
+        if (url == urlToLoadAfterInitialDeconnected && !WebOdooUtils.isDeconnected(url.toString())) {
+            Log.d("MyWebViewClient", "Successfully loaded or navigated to token URL: $url")
+            if (!connectionAttemptMadeWithTokenUrl) {
+                connectionAttemptMadeWithTokenUrl = true
+            }
+        }
     }
 
     override fun onReceivedError(
@@ -37,9 +48,12 @@ class MyWebViewClient(
         if (request?.isForMainFrame == true) {
             isLoadingLambda(false)
             hasErrorLambda(true)
-            val errorDesc = "Error ${error?.errorCode}: ${error?.description}"
+            val errorDesc = "Error ${error?.errorCode}: ${error?.description} on URL ${request.url}"
             errorMessageLambda(errorDesc)
             Log.e("MyWebViewClient", errorDesc)
+            if (request.url.toString() == urlToLoadAfterInitialDeconnected) {
+                Log.e("MyWebViewClient", "Error occurred while loading the token URL.")
+            }
         }
     }
 
@@ -48,17 +62,31 @@ class MyWebViewClient(
         request: WebResourceRequest?
     ): Boolean {
         val requestedUrl = request?.url?.toString()
-        if (requestedUrl != null) {
-            Log.d("MyWebViewClient", "Requested URL: $requestedUrl")
-            if (WebOdooUtils.isDeconnected(requestedUrl)) {
-                Log.d("MyWebViewClient", "Deconnected state detected. Navigating.")
-                onDeconnectedNavigate()
-            } else {
-                Log.d("MyWebViewClient", "Loading URL in WebView: $requestedUrl")
-                view?.loadUrl(requestedUrl)
-            }
-            return true
+
+        if (view == null || requestedUrl == null) {
+            return false
         }
-        return false
+
+        Log.d("MyWebViewClient", "Requested URL: $requestedUrl")
+
+        if (WebOdooUtils.isDeconnected(requestedUrl)) {
+            Log.d("MyWebViewClient", "Deconnected state detected for URL: $requestedUrl")
+            if (connectionAttemptMadeWithTokenUrl) {
+                Log.d("MyWebViewClient", "Already attempted token auth. Navigating to home.")
+                onDeconnectedNavigate()
+                return true
+            } else {
+                Log.d("MyWebViewClient", "First deconnected detection. Attempting to load token URL: $urlToLoadAfterInitialDeconnected")
+                connectionAttemptMadeWithTokenUrl = true
+                view.loadUrl(urlToLoadAfterInitialDeconnected)
+                return true
+            }
+        } else {
+            if (requestedUrl == urlToLoadAfterInitialDeconnected) {
+                connectionAttemptMadeWithTokenUrl = true
+            }
+            Log.d("MyWebViewClient", "URL not deconnected. Allowing WebView to handle: $requestedUrl")
+            return false
+        }
     }
 }

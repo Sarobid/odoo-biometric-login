@@ -12,8 +12,10 @@ class OdooRpcClientService(private val odooConfigService: OdooConfigService) {
     private var internalUid: Int? = null
     private var internalPassword: String? = null
     private val TAG = "OdooRpcClientService"
-    private val erreurConnection = "Pas de connexion Internet. Vérifiez et réessayez."
+    private val erreurConnection = "Pas de connexion Internet ou mauvaise paramètrage. Vérifiez et réessayez."
     suspend fun authenticate(username: String, passwordIn: String): Result<Int> {
+        Log.i(TAG, "Authenticating with username: $username")
+        Log.i(TAG, "Password: $passwordIn")
         return withContext(Dispatchers.IO) {
             try {
                 val config = odooConfigService.getConfigCommon()
@@ -23,6 +25,7 @@ class OdooRpcClientService(private val odooConfigService: OdooConfigService) {
                     passwordIn,
                     emptyMap<String, Any>()
                 )
+                Log.d(TAG, "Authentication parameters: $params")
                 val response = client.execute(config, "authenticate", params)
                 if (response is Int && response != 0) {
                     internalUid = response
@@ -32,7 +35,7 @@ class OdooRpcClientService(private val odooConfigService: OdooConfigService) {
                 } else {
                     Log.w(TAG, "Authentication failed. Response: $response")
                     reinitialisation()
-                    Result.failure(Exception("Authentication failed. Invalid credentials or server error."))
+                    Result.failure(Exception(erreurConnection))
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Authentication error", e)
@@ -83,6 +86,7 @@ class OdooRpcClientService(private val odooConfigService: OdooConfigService) {
                     Result.failure(Exception(erreurStatic))
                 }
             } catch (e: Exception) {
+                Log.e(TAG, "Error in accessCodePin", e)
                 Result.failure(Exception(erreurConnection))
             }
         }

@@ -47,6 +47,9 @@ android {
 
 dependencies {
 
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.apache.xmlrpc.client)
     implementation(libs.apache.xmlrpc.common)
     implementation(libs.androidx.webkit)
