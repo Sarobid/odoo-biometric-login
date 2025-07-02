@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.viseopos.ui.screen.AuthViaCodeScreen
 import com.example.viseopos.ui.screen.HomeScreen
+import com.example.viseopos.ui.screen.ManageWarehouseScreen
 import com.example.viseopos.ui.screen.SettingScreen
 import com.example.viseopos.ui.screen.WebOdooScreen
 import com.example.viseopos.utils.WebOdooUtils
@@ -24,6 +25,8 @@ object AppDestinations {
     const val AUTH_VIA_CODE_GRAPH_ROUTE = "auth_via_code_graph"
     const val SETTINGS_ROUTE = "settings"
     const val SETTINGS_GRAPH_ROUTE = "settings_graph"
+    const val MANAGE_WAREHOUSE_ROUTE = "manage_warehouse"
+    const val MANAGE_WAREHOUSE_GRAPH_ROUTE = "manage_warehouse_graph"
 }
 
 @Composable
@@ -73,6 +76,14 @@ fun AppNavHost(navController: NavHostController = rememberNavController(), modif
         ) {
             composable(AppDestinations.SETTINGS_ROUTE) {
                 SettingScreen(navController = navController, modifier = modifier)
+            }
+        }
+        navigation(
+            startDestination = AppDestinations.MANAGE_WAREHOUSE_ROUTE,
+            route = AppDestinations.MANAGE_WAREHOUSE_GRAPH_ROUTE
+        ){
+            composable(AppDestinations.MANAGE_WAREHOUSE_ROUTE) {
+                ManageWarehouseScreen(navController = navController, modifier = modifier)
             }
         }
     }

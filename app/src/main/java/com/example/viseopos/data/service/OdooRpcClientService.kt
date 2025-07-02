@@ -1,10 +1,12 @@
 package com.example.viseopos.data.service
 
 import android.util.Log
+import com.example.viseopos.data.models.Warehouse
 import com.example.viseopos.services.OdooConfigService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.apache.xmlrpc.client.XmlRpcClient
+import kotlin.collections.get
 
 class OdooRpcClientService(private val odooConfigService: OdooConfigService) {
     private var client = XmlRpcClient()
@@ -91,7 +93,60 @@ class OdooRpcClientService(private val odooConfigService: OdooConfigService) {
             }
         }
     }
-
+    suspend fun getAllDepot(usernameForAuth: String, passwordForAuth: String): Result<List<Warehouse>> {
+        if (internalUid == null || internalPassword == null) {
+            Log.d(TAG, "Not authenticated or password not stored, attempting authentication.")
+            val authResult = authenticate(usernameForAuth, passwordForAuth)
+            if (authResult.isFailure) {
+                return Result.failure(authResult.exceptionOrNull() ?:Exception(erreurConnection))
+            }
+        }
+        return withContext(Dispatchers.IO) {
+            try {
+                val domain = listOf<Any>()
+                val fieldsToRetrieve = listOf("id", "name")
+                val options = mapOf("fields" to fieldsToRetrieve)
+                val params = listOf(
+                    odooConfigService.getCurrentDbName(),
+                    internalUid,
+                    internalPassword,
+                    "v.emplacement.depot",
+                    "search_read",
+                    listOf(domain),
+                    options
+                )
+                Log.d(TAG, "getAllDepot - Params for search_read: $params")
+                val config = odooConfigService.getConfigObject()
+                val response = client.execute(config, "execute_kw", params)
+                if (response is Array<*>) {
+                    val warehouses = mutableListOf<Warehouse>()
+                    for (item in response) {
+                        if (item is Map<*, *>) {
+                            val id = item["id"] as? Int
+                            val name = item["name"] as? String
+                            if (id != null && name != null) {
+                                warehouses.add(Warehouse(id = id.toString(), name = name))
+                            } else {
+                                Log.w(TAG, "getAllDepot - Item malformé reçu: $item")
+                            }
+                        }
+                    }
+                    Log.i(TAG, "getAllDepot - Récupéré ${warehouses.size} dépôts.")
+                    Result.success(warehouses)
+                } else {
+                    val errorMessage ="Erreur inconnue du serveur Odoo."
+                    Result.failure(Exception(errorMessage))
+                }
+            } catch (e: org.apache.xmlrpc.XmlRpcException) {
+                Log.e(TAG, "getAllDepot - XmlRpcException", e)
+                Result.failure(Exception("Erreur XML-RPC: ${e.message} (Code: ${e.code})"))
+            }
+            catch (e: Exception) {
+                Log.e(TAG, "getAllDepot - Erreur générale", e)
+                Result.failure(Exception(erreurConnection))
+            }
+        }
+    }
     fun reinitialisation() {
         internalUid = null
         internalPassword = null
