@@ -72,7 +72,7 @@ fun WebOdooScreen(
 
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
-                    settings.databaseEnabled = true
+                    settings.                                                                                                                            databaseEnabled = true
                     settings.allowFileAccess = true
                     settings.javaScriptCanOpenWindowsAutomatically = true
                     settings.cacheMode = WebSettings.LOAD_DEFAULT

@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.viseopos.R
-import com.example.viseopos.ui.components.ButtonFacial
 import com.example.viseopos.ui.navigation.AppDestinations
 import com.example.viseopos.ui.theme.ViseoPosTheme
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,8 +75,6 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier) 
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             Spacer(modifier = Modifier.height(48.dp))
-//            ButtonFacial(navController = navController)
-  //          Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = {
                     navController.navigate(AppDestinations.AUTH_VIA_CODE_ROUTE)
