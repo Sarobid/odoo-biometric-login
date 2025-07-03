@@ -1,6 +1,7 @@
 package com.example.viseopos.ui.screen
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.util.Log
 import android.view.ViewGroup
 import android.webkit.WebSettings
@@ -17,12 +18,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.viseopos.R
 import com.example.viseopos.ui.navigation.AppDestinations
 import com.example.viseopos.ui.webView.MyWebViewClient
+import com.example.viseopos.ui.webView.WebAppInterface
+import com.example.viseopos.viewmodel.ManageWarehouseViewModel
+import com.example.viseopos.viewmodel.ManageWarehouseViewModelFactory
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
@@ -31,7 +37,10 @@ fun WebOdooScreen(
     modifier: Modifier = Modifier,
     token: String,
     hostname: String,
-    dbName: String
+    dbName: String,
+    manageWarehouseViewModel: ManageWarehouseViewModel = viewModel(
+        factory = ManageWarehouseViewModelFactory(LocalContext.current.applicationContext as Application)
+    )
 ) {
     val initialLoadUrl = "${hostname.trimEnd('/')}?db=$dbName"
     val odooSessionUrlWithToken = "${hostname.trimEnd('/')}${stringResource(R.string.endpoint_url_connect)}$token&dbname=$dbName"
@@ -39,6 +48,7 @@ fun WebOdooScreen(
     var hasError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var webViewInstance: WebView? by remember { mutableStateOf(null) }
+    val webViewWarehouses = manageWarehouseViewModel.warehouses
 
     val myWebViewClient = remember(navController, odooSessionUrlWithToken) {
         MyWebViewClient(
@@ -84,6 +94,10 @@ fun WebOdooScreen(
                     settings.builtInZoomControls = true
                     settings.displayZoomControls = false
                     WebView.setWebContentsDebuggingEnabled(true)
+                    addJavascriptInterface(
+                        WebAppInterface(context, webViewWarehouses),
+                        "AndroidInterface"
+                    )
 
                     Log.d("WebOdooScreen", "Attempting to load initial URL in factory: $initialLoadUrl")
                     loadUrl(initialLoadUrl)
@@ -101,7 +115,9 @@ fun WebOdooScreen(
         }
 
         if (hasError && errorMessage != null) {
-            Box(modifier = Modifier.fillMaxSize().align(Alignment.Center)) {
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .align(Alignment.Center)) {
                 Text(
                     text = "Failed to load page.\nError: $errorMessage",
                     modifier = Modifier.align(Alignment.Center)
